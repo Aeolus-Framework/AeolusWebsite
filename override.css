@@ -1,0 +1,14 @@
+/* Overrides Bootstrap CSS */
+
+.navbar-nav > li {
+    display: inline-block;
+    float: none;
+}
+
+.nav-item img {
+    height: 30px;
+}
+
+nav {
+    background-color: teal;
+}
