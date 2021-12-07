@@ -8,6 +8,8 @@
 
 .navbar-inner {
     text-align: center;
+    position: absolute;
+    
 }
 
 .nav-item img {
@@ -15,10 +17,21 @@
     float: center;
 }
 
+.navbar-brand img {
+    height: 60px;
+}
+
 nav {
-    background-color: teal;
+    background-color: #ffffff;
+    margin-top: 0.5%;
+    margin-left: 0.4%;
+    margin-right: 0.4%;
 }
 
 .center{
     text-align: center;
+}
+
+body {
+    background-color: #f7f7f7;
 }
