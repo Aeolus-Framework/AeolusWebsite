@@ -3,12 +3,22 @@
 .navbar-nav > li {
     display: inline-block;
     float: none;
+    text-align: center;
+}
+
+.navbar-inner {
+    text-align: center;
 }
 
 .nav-item img {
     height: 30px;
+    float: center;
 }
 
 nav {
     background-color: teal;
+}
+
+.center{
+    text-align: center;
 }
