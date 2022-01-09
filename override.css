@@ -110,4 +110,14 @@ body {
   
     /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     background: linear-gradient(to right, #00a896, #06c2af)
-  }
+}
+
+h3 {
+    font-size: 16px;
+    text-align: right;
+}
+
+h4 {
+    font-size: 12px;
+    text-align: center;
+}
