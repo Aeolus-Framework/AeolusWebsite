@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "express": "^4.17.2",
+    "hbs": "^4.2.0",
+    "http": "^0.0.1-security",
+    "path": "^0.12.7"
+  }
+}
