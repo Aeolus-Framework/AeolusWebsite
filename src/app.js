@@ -25,13 +25,27 @@ app.get('', (req, res) => {
 
 app.get('/dashboard', (req, res) => {
     res.render('dashboard', {
-        title: 'Aeolus - Dashboard'
+        title: 'Aeolus - Dashboard',
+        consumption: '685' + ' Wh',
+        production: '285' + ' Wh',
+        buffer: '4620' + ' kWh',
+        efficiency: '38' + ' %',
+        wind: '4' + ' m/s',
+        temperature: '-9' + ' °C',
+        price: '3.19' + ' sek'
     })
 })
 
 app.get('/admin', (req, res) => {
     res.render('admin', {
-        title: 'Aeolus - Admin'
+        title: 'Aeolus - Admin',
+        power: 'Running!' + ' ' + '685' + ' Wh',
+        ratio: '2:1' + ' Buffer / Market',
+        demand: '???' + ' ???',
+        price: '3' + ' kr / watt',
+        modelPrice: '2' + ' kr / watt',
+        prosumers: '458' + ' online',
+        blackout: true
     })
 })
 
