@@ -13,7 +13,6 @@ async function verify(token) {
     }
 
     const payload = ticket.getPayload();
-    const domain = payload["hd"];
     const email = payload["email"];
     const username = email.substring(0, email.indexOf("@"));
 
