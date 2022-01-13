@@ -28,4 +28,7 @@ router.get('/admin', async (req, res) => {
     })
 })
 
+//Coal power
+router.post('/admin/coal', async (req, res) => {})
+
 module.exports = router

@@ -1,11 +1,10 @@
 const express = require('express');
-const async = require('hbs/lib/async');
 const router = express.Router();
 const oauth = require('../utils/googleauth');
+const userprofileCollection = require("./../models/userprofile")
 
-router.get("google/signin", async (req, res) => {
+router.get("/google/signin", async (req, res) => {
     const token = req.query.token;
-    req.session.uid = 1
 
     if (token === undefined) {
         res.status(400);
@@ -15,15 +14,18 @@ router.get("google/signin", async (req, res) => {
 
     const verification = await oauth.verify(token)
     
-    if (req.session.signedIn) {
-        res.status(200);
-        res.send();
+    if(verification.validToken){
+        const profile = await userprofileCollection.findOne({email: email}).exec();
+        if(profile){
+            req.session.signedIn = true;
+            res.redirect(302, "/dashboard");
+        } else {
+            req.session.signedIn = false;
+            res.redirect(302, "/register");
+        }
     } else {
-        req.session.signedIn = true;
-        res.status(201);
-        res.send(`Welcome ${verification.username}`);
+        res.status(401).send("Invalid token");
     }
-
 });
 
 router.get("/signout", async (req, res) => {

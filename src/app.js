@@ -4,10 +4,20 @@ const hbs = require('hbs')
 const path = require('path')
 const userRouter = require('./routes/user-route')
 const oauth = require('./routes/oauth')
+const session = require("express-session");
 
 const app = express()
 
 const port = process.env.PORT || 5500
+
+// Middleware
+app.use(
+    session({
+        secret: "ProjectAl",
+        resave: false,
+        saveUninitialized: true
+    })
+);
 
 app.use(userRouter)
 app.use(oauth)
