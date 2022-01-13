@@ -87,9 +87,14 @@ body {
     margin-top: 20px;
 }
 
+.aeolus-red-bg { /* For Warnings, Alerts, and the like */
+    background: linear-gradient(45deg,#a80024,#c20606);
+}
+
 .aeolus-green-bg {
     background: linear-gradient(45deg,#00a896,#06c2af);
 }
+
 
 .dash-title {
     font-family: Arial, Helvetica, sans-serif;
@@ -99,4 +104,46 @@ body {
 .location-time {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 15px;
+}
+
+.gradient-custom {
+    /* fallback for old browsers */
+    background: #6a11cb;
+  
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, #00a896, #06c2af);
+  
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right, #00a896, #06c2af)
+}
+
+h3 {
+    font-size: 16px;
+    text-align: right;
+}
+
+h4 {
+    font-size: 12px;
+    text-align: center;
+}
+
+.bm {
+    font-size: 25px;
+}
+
+.coal {
+    font-size: 25px;
+}
+
+.cardfix {
+    padding-bottom: 14px;
+}
+
+.alert {
+    width: 100%;
+    float: auto;
+}
+
+.alerttext {
+    text-align: center;
 }

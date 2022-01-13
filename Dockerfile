@@ -1,5 +1,11 @@
-FROM nginx
+FROM node:16
 
-COPY . /usr/share/nginx/html
+WORKDIR /usr/src/app
 
-EXPOSE 80
+ENV NODE_ENV=production
+
+COPY . .
+RUN npm install
+
+EXPOSE 5500
+CMD [ "node", "src/app.js"]
