@@ -16,4 +16,4 @@ var userprofileSchema = new mongoose.Schema(
 
 const userprofile = mongoose.model("userprofile", userprofileSchema);
 
-module.eexports = userprofile;
+module.exports = userprofile;

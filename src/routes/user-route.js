@@ -31,4 +31,26 @@ router.get('/admin', async (req, res) => {
 //Coal power
 router.post('/admin/coal', async (req, res) => {})
 
+//Production ratio
+router.post('admin/ratio', async (req, res) => {})
+
+//Electricity price
+router.post('admin/price', async (req, res) => {})
+
+/*
+For viewing users that are online
+Base solution to work from later
+
+router.get('/admin/prosumerlist', function (req,res,next) {
+    User.find({role: 'prosumer'}, function(err, teachers) {
+       if(err) {
+          next(err); //Error handling?
+       } else {
+          res.render('admin/prosumers', {title: 'Prosumer list',prosumers:prosumers}); 
+       }
+    });
+});
+
+*/
+
 module.exports = router

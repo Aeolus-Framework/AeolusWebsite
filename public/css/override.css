@@ -147,3 +147,7 @@ h4 {
 .alerttext {
     text-align: center;
 }
+
+.inv {
+    display: none;
+}
