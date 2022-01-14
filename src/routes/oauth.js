@@ -16,13 +16,11 @@ router.get("/google/signin", async (req, res) => {
     
     if(verification.validToken){
         const profile = await userprofileCollection.findOne({email: email}).exec();
-        if(profile){
-            req.session.signedIn = true;
-            res.redirect(302, "/dashboard");
-        } else {
-            req.session.signedIn = false;
-            res.redirect(302, "/register");
+        if(!profile){
+            // TODO make an automatic registration
         }
+        req.session.signedIn = true;
+        res.redirect(302, "/dashboard");
     } else {
         res.status(401).send("Invalid token");
     }

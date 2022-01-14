@@ -11,7 +11,7 @@ var userprofileSchema = new mongoose.Schema(
         loginProvider: String,
         role: String
     },
-    { versionKey: true }
+    //{ versionKey: true }
 );
 
 const userprofile = mongoose.model("userprofile", userprofileSchema);
