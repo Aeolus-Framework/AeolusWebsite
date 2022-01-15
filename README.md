@@ -10,6 +10,8 @@ A Front End prototype in progress for the Aeolus Webapp
 | ------------------------------- | ----------------------------------------------------------- | -------------------------- |
 | `MONGODB_HOST`                  | Host with a mongo instance running, may include port number |
 | `MONGODB_DATABASE`              | Database to use                                             |
+| `GOOGLE_CLIENT_ID`              | Google OAuth client ID                                      |
+| `GOOGLE_CLIENT_SECRET`          | Google OAuth client secret                                  |
 | `MONGODB_USERNAME` _(optional)_ | Username to access database                                 | _None_                     |
 | `MONGODB_PASSWORD` _(optional)_ | Password to access database                                 | _None_                     |
 | `API_HOST` _(optional)_         | Host and path to root of aeolus API                         | `"https://aeolus.se/api/"` |

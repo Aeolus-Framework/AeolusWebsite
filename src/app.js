@@ -12,6 +12,9 @@ const oauth = require("./routes/oauth");
 //const redis = require('redis')
 const session = require("express-session");
 
+// Open connection to database
+require("./db/mongoose");
+
 const app = express();
 const port = process.env.PORT || 5500;
 const publicDirectoryPath = path.join(__dirname, "../public");

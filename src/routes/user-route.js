@@ -11,9 +11,9 @@ router.get('/dashboard', async (req, res) => {
 
 
     //household
-    const householdResponse = await fetch(`${API_HOST}/simulator/household/${ID}`);
-    const household = await householdResponse.json();
-    const currentConsumption = household.
+    // const householdResponse = await fetch(`${API_HOST}/simulator/household/${ID}`);
+    // const household = await householdResponse.json();
+    // const currentConsumption = household.
 
     res.render('dashboard', {
         title: 'Aeolus - Dashboard',

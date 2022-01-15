@@ -9,14 +9,14 @@ const JWT_SECRET = process.env.JWT_SECRET || "123";
  * @param name {string}
  * @returns {string} Created token
  */
-function createToken(role, email, name){
+function createToken(userid, role, email, name) {
     const payload = {
-        role = role,
-        email = email,
-        name = name,
-        issuer = JWT_ISSUER,
-    }
-    return jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
+        sub: userid,
+        role: role,
+        email: email,
+        name: name
+    };
+    return jwt.sign(payload, JWT_SECRET, { expiresIn: "1h", issuer: JWT_ISSUER });
 }
 
 /**
@@ -26,7 +26,7 @@ function createToken(role, email, name){
 function verifyToken(token){
     try {
         return {
-            token: jwt.verify(token, JWT_SECRET),
+            token: jwt.verify(token, JWT_SECRET, { issuer: JWT_ISSUER }),
             valid: true
         };
     } catch (error) {
