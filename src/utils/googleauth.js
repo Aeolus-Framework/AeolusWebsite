@@ -1,12 +1,18 @@
 const { OAuth2Client } = require('google-auth-library');
-const client = new OAuth2Client("828947200728-berqofeu3s3fn0eq4fjqq66c3g7o0sop.apps.googleusercontent.com", "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", "https://aeolus.se/signin-google");
+
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+
+if(!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) throw new Error("Google client id and client secret must be non-empty")
+
+const client = new OAuth2Client(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET);
 
 async function verify(token) {
     let ticket;
     try {
         ticket = await client.verifyIdToken({
             idToken: token,
-            audience: "828947200728-berqofeu3s3fn0eq4fjqq66c3g7o0sop.apps.googleusercontent.com"
+            audience: GOOGLE_CLIENT_ID
         });
     } catch (error) {
         return { validToken: false };
@@ -14,12 +20,16 @@ async function verify(token) {
 
     const payload = ticket.getPayload();
     const email = payload["email"];
-    const username = email.substring(0, email.indexOf("@"));
+    const firstname = payload["given_name"];
+    const lastname = payload["family_name"];
+    const profilePicture = payload["picture"];
 
     return {
         validToken: true,
-        username,
-        email
+        email,
+        firstname,
+        lastname,
+        profilePicture
     };
 }
 

@@ -33,7 +33,7 @@
     <div class="container dash"> 
         <h1 class="dash-title">Admin</h1>
         <div class="row">
-            <div class="col-md-4 col-xl-3 pointerfix" onclick="togglePower()">
+            <div class="col-md-4 col-xl-3 pointerfix" onclick="javascript:toggleForm(this)" data-target="#powerForm">
                 <div class="card aeolus-green-bg order-card">
                     <div class="card-block">
                         <h6 class="m-b-20">Coal Power</h6>
@@ -43,7 +43,7 @@
                 </div>
             </div>
 
-            <div class="form-popup" id="powerForm">
+            <div class="form-popup reset" id="powerForm">
                 <form action="/admin/changepowerplant" class="form-container" method="post">
                     <h1>Manage</h1>
 
@@ -60,7 +60,7 @@
                 </form>
             </div>
             
-            <div class="col-md-4 col-xl-3 pointerfix" onclick="toggleRatio()">
+            <div class="col-md-4 col-xl-3 pointerfix" onclick="javascript:toggleForm(this)" data-target="#ratioForm">
                 <div class="card aeolus-green-bg order-card">
                     <div class="card-block">
                         <h6 class="m-b-20">Production Ratio</h6>
@@ -70,7 +70,7 @@
                 </div>
             </div>
 
-            <div class="form-popup" id="ratioForm">
+            <div class="form-popup reset" id="ratioForm">
                 <form action="/action_page.php" class="form-container">
                     <h1>Manage</h1>
 
@@ -90,7 +90,7 @@
                 </div>
             </div>
             
-            <div class="col-md-4 col-xl-3 pointerfix" onclick="togglePrice()">
+            <div class="col-md-4 col-xl-3 pointerfix" onclick="javascript:toggleForm(this)" data-target="#priceForm">
                 <div class="card aeolus-green-bg order-card">
                     <div class="card-block">
                         <h6 class="m-b-20">Electricity Price</h6>
@@ -100,7 +100,7 @@
                 </div>
             </div>
 
-            <div class="form-popup" id="priceForm">
+            <div class="form-popup reset" id="priceForm">
                 <form action="/action_page.php" class="form-container">
                     <h1>Manage</h1>
 
@@ -132,30 +132,20 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <script>
-        function togglePower() {
-            var x = document.getElementById("powerForm");
-            if (x.style.display === "none") {
-                x.style.display = "block";
-            } else {
-                x.style.display = "none";
-            }
-        }
+        function toggleForm(e) {
+            console.log(e);
+            const dispatcher = e;
+            const formSelector = dispatcher.dataset.target;
+            const element = document.querySelector(formSelector);
 
-        function toggleRatio() {
-            var x = document.getElementById("ratioForm");
-            if (x.style.display === "none") {
-                x.style.display = "block";
-            } else {
-                x.style.display = "none";
-            }
-        }
+            document.querySelectorAll(`.form-popup:not(${formSelector})`).forEach(elem => {
+                elem.style.display = "none";
+            });
 
-        function togglePrice() {
-            var x = document.getElementById("priceForm");
-            if (x.style.display === "none") {
-                x.style.display = "block";
+            if (element.style.display === "none" || !element.style.display) {
+                element.style.display = "block";
             } else {
-                x.style.display = "none";
+                element.style.display = "none";
             }
         }
 

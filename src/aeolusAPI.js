@@ -1,6 +1,7 @@
 const fetch = require("node-fetch");
 
 const host = process.env.API_HOST || "https://aeolus.se/api/";
+const methodTypeCanHaveBody = ["POST", "PUT", "PATCH"]
 
 /**
  * @param path {string}
@@ -9,15 +10,18 @@ const host = process.env.API_HOST || "https://aeolus.se/api/";
  * @param body {object?}
  * @returns {Promise<{data: any, statusCode: number}>}
  */
-async function fetchData(path, method, jwt, body = undefined) {
+async function fetchData(path, method, jwt, body) {
   const url = host + path;
+  const options = {};
+  options.method = method;
+  options.headers = { Authorization: `Bearer ${jwt}`, "Content-Type": "application/json" };
+  if(body && methodTypeCanHaveBody.includes(method)){
+    options.body = JSON.stringify(body);
+  }
+  
   let response;
   try {
-    response = await fetch(url, {
-      method,
-      body: body ? "" : JSON.stringify(body),
-      headers: { Authorization: `Bearer ${jwt}` },
-    });
+    response = await fetch(url, options);
   } catch (error) {
     console.log(error);
     return { statusCode: 500 };
@@ -27,11 +31,11 @@ async function fetchData(path, method, jwt, body = undefined) {
   try {
     return {
       data: await response.json(),
-      statusCode: response.statusCode,
+      statusCode: response.status,
     };
   } catch (error) {
     return {
-      statusCode: response.statusCode,
+      statusCode: response.status,
     };
   }
 }

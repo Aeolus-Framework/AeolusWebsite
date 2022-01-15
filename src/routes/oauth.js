@@ -2,32 +2,50 @@ const express = require('express');
 const router = express.Router();
 const oauth = require('../utils/googleauth');
 const userprofileCollection = require("./../models/userprofile")
+const jwt = require("../utils/jwt");
 
 router.get("/google/signin", async (req, res) => {
     const token = req.query.token;
 
     if (token === undefined) {
-        res.status(400);
-        res.send("Bad Request: Token is missing")
-        return;
+        return res.status(400).send("Bad Request: Token is missing")
     }
 
     const verification = await oauth.verify(token)
     
     if(verification.validToken){
-        const profile = await userprofileCollection.findOne({email: email}).exec();
+        let profile = await userprofileCollection.findOne({email: verification.email, loginProvider: "Google"}).exec();
         if(!profile){
-            // TODO make an automatic registration
+            try {
+                profile = await new userprofileCollection({
+                    firstname: verification.firstname,
+                    lastname: verification.lastname,
+                    profilePicture: verification.profilePicture,
+                    role: "User",
+                    email: verification.email,
+                    enabled: true,
+                    loginProvider: "Google"
+                }).save();
+            } catch (error){
+                return res.status(500).send("Something went wrong and we were unable to create your profile. Please try again later.");
+            }
         }
         req.session.signedIn = true;
-        res.redirect(302, "/dashboard");
+        req.session.uid = profile._id;
+        req.session.jwt = jwt.createToken(profile._id, profile.role, profile.email, profile.name);
+
+        if(profile.role === "Admin"){
+            res.redirect(302, "/admin");
+        } else {
+            res.redirect(302, "/dashboard");
+        }
     } else {
         res.status(401).send("Invalid token");
     }
 });
 
 router.get("/signout", async (req, res) => {
-    req.session.signedIn = false;
+    req.session.destroy()
     res.status(200);
     res.send("You're now signed out");
 });

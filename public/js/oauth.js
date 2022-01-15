@@ -2,7 +2,7 @@ async function onSignInGoogle(googleUser) {
     const origin = window.location.origin;
     const token = googleUser.getAuthResponse().id_token;
 
-    const redirect = `${origin}/google/signin?token=${token}`;
+    const redirect = `${origin}/oauth/google/signin?token=${token}`;
     window.location = redirect;
   }
   
