@@ -15,5 +15,8 @@
     "path": "^0.12.7",
     "redis": "^4.0.2",
     "validator": "^13.7.0"
+  },
+  "devDependencies": {
+    "dotenv": "^12.0.3"
   }
 }
