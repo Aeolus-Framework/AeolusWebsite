@@ -21,10 +21,10 @@ router.get('/', async (req, res) => {
 
 
 router.post("/changebuyratio", async (req, res) => {
-    var status = req.body.powerStatus === "running";
+    var buyRatio = (req.body.buyRatio) / 100
   
     const apiResponse = await aeolusAPI.fetchData(
-      "/simulator/powerplant/status",
+      "/simulator/household/" + req.session.id,
       "PUT",
       req.session.jwt,
       { active: status }
