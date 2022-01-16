@@ -1,0 +1,181 @@
+{{!--
+
+input {
+household: household
+errors: string[]
+}
+
+--}}
+
+<div class="mb-3">
+    <label for="name" class="form-label">Name<span class="text-danger">*</span></label>
+    <input name="name" type="text" class="form-control" id="name" aria-describedby="nameHelp" value="{{household.name}}"
+        required>
+    <div id="nameHelp" class="form-text">Userfiendly householdname</div>
+</div>
+<div class="mb-3">
+    <label for="area" class="form-label">Household area<span class="text-danger">*</span></label>
+    <div class="input-group mb-3">
+        <input name="area" type="number" min="0" class="form-control" id="area" aria-describedby="areaHelp"
+            value="{{household.area}}" required>
+        <span class="input-group-text">m²</span>
+    </div>
+</div>
+<div class="mb-3">
+    <label for="thumbnail" class="form-label">Household image</label>
+    <input name="thumbnail" type="url" class="form-control" id="thumbnail" value="{{household.thumbnail}}">
+</div>
+<div class="mb-3">
+    <label for="batterycapacity" class="form-label">Batterycapacity<span class="text-danger">*</span></label>
+    <div class="input-group mb-3">
+        <input name="batteryMaxCapacity" type="number" class="form-control" id="batterycapacity"
+            aria-describedby="batterycapacityHelp" value="{{household.batteryMaxCapacity}}">
+        <span class="input-group-text">Joule</span>
+    </div>
+    <div id="batterycapacityHelp" class="form-text">Maximum capacity of households battery</div>
+</div>
+
+<fieldset>
+    <legend>Location</legend>
+    <div class="mb-3">
+        <label for="latitude" class="form-label">Latitude<span class="text-danger">*</span></label>
+        <input name="locationLatitude" type="text" class="form-control" id="latitude"
+            value="{{household.locationLatitude}}">
+    </div>
+    <div class="mb-3">
+        <label for="latitude" class="form-label">Longitude<span class="text-danger">*</span></label>
+        <input name="locationLongitude" type="text" class="form-control" id="latitude"
+            value="{{household.locationLongitude}}">
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend>Market ratios</legend>
+    <div class="mb-3">
+        <label for="sellratioOverProduction" class="form-label">Sell ratio during over production<span
+                class="text-danger">*</span></label>
+        <input name="sellRatioOverProduction" type="text" class="form-control" id="sellratioOverProduction"
+            value="{{household.sellRatioOverProduction}}">
+        <div id="batterycapacityHelp" class="form-text">Value between 0 and 1 of how much to sell during
+            over production</div>
+    </div>
+    <div class="mb-3">
+        <label for="buyratioUnderProduction" class="form-label">Buy ratio during under production<span
+                class="text-danger">*</span></label>
+        <input name="buyRatioUnderProduction" type="text" class="form-control" id="buyratioUnderProduction"
+            value="{{household.buyRatioUnderProduction}}">
+        <div id="batterycapacityHelp" class="form-text">Value between 0 and 1 of how much to buy during
+            under production</div>
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend>Windturbines</legend>
+    <div class="mb-3">
+        <label for="activeWindTurbines" class="form-label">
+            Number of active windturbines<span class="text-danger">*</span>
+        </label>
+        <input name="windTurbinesActive" type="number" class="form-control" id="activeWindTurbines" min="0"
+            value="{{household.windTurbinesActive}}">
+    </div>
+    <div class="mb-3">
+        <label for="maximumProduction" class="form-label">
+            Maximum production<span class="text-danger">*</span>
+        </label>
+        <div class="input-group mb-3">
+            <input name="windTurbinesMaximumProduction" type="number" class="form-control" id="maximumProduction"
+                min="0" aria-describedby="maximumProductionHelp" value="{{household.windTurbinesMaximumProduction}}">
+            <span class="input-group-text">W</span>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="cutinWindspeed" class="form-label">
+            Cutin windspeed<span class="text-danger">*</span>
+        </label>
+        <div class="input-group mb-3">
+            <input name="windTurbinesCutinWindspeed" type="number" class="form-control" id="cutinWindspeed" min="0"
+                aria-describedby="cutinWindspeedHelp" value="{{household.windTurbinesCutinWindspeed}}">
+            <span class="input-group-text">m/s</span>
+        </div>
+        <div id="cutinWindspeedHelp" class="form-text">Lowest windspeed in which the windturbines will
+            be
+            generating electricity</div>
+    </div>
+    <div class="mb-3">
+        <label for="cutoutWindspeed" class="form-label">
+            Cutout windspeed<span class="text-danger">*</span>
+        </label>
+        <div class="input-group mb-3">
+            <input name="windTurbinesCutoutWindspeed" type="number" class="form-control" id="cutoutWindspeed" min="0"
+                aria-describedby="cutoutWindspeedHelp" value="{{household.windTurbinesCutoutWindspeed}}">
+            <span class="input-group-text">m/s</span>
+        </div>
+        <div id="cutoutWindspeedHelp" class="form-text">Upper windspeed limit before the windturbines
+            will
+            be stopped</div>
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend>Consumption</legend>
+    <div class="mb-3">
+        <label for="consumptionAverage" class="form-label">
+            Average consumption<span class="text-danger">*</span>
+        </label>
+        <div class="input-group mb-3">
+            <input name="baseConsumption" type="number" class="form-control" id="consumptionAverage" min="0"
+                aria-describedby="consumptionAverageHelp" value="{{household.baseConsumption}}">
+            <span class="input-group-text">W</span>
+        </div>
+        <div id="consumptionAverageHelp" class="form-text">Average consumption during low peak.</div>
+    </div>
+    <div class="mb-3">
+        <label for="consumptionAmplitudeMean" class="form-label">
+            Consumption spike mean amplitude<span class="text-danger">*</span>
+        </label>
+        <div class="input-group mb-3">
+            <input name="consumptionSpikeAmplitudeMean" type="number" class="form-control" id="consumptionAmplitudeMean"
+                min="0" aria-describedby="consumptionAmplitudeMeanHelp"
+                value="{{household.consumptionSpikeAmplitudeMean}}">
+            <span class="input-group-text">W</span>
+        </div>
+        <div id="consumptionAmplitudeMeanHelp" class="form-text">Average consumption during high peak
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="consumptionAmplitudeVariance" class="form-label">
+            Consumption spike amplitude variance<span class="text-danger">*</span>
+        </label>
+        <div class="input-group mb-3">
+            <input name="consumptionSpikeAmplitudeVariance" type="number" class="form-control"
+                id="consumptionAmplitudeVariance" min="0" aria-describedby="consumptionAmplitudeVarianceHelp"
+                value="{{household.consumptionSpikeAmplitudeVariance}}">
+            <span class="input-group-text">W</span>
+        </div>
+        <div id="consumptionAmplitudeVarianceHelp" class="form-text"></div>
+    </div>
+    <div class="mb-3">
+        <label for="consumptionDurationMean" class="form-label">
+            Consumption spike mean duration<span class="text-danger">*</span>
+        </label>
+        <div class="input-group mb-3">
+            <input name="consumptionSpikeDurationMean" type="number" class="form-control" id="consumptionDurationMean"
+                min="0" aria-describedby="consumptionDurationMeanHelp"
+                value="{{household.consumptionSpikeDurationMean}}">
+            <span class="input-group-text">minutes</span>
+        </div>
+        <div id="consumptionDurationMeanHelp" class="form-text"></div>
+    </div>
+    <div class="mb-3">
+        <label for="consumptionDurationVariance" class="form-label">
+            Consumption spike duration variance<span class="text-danger">*</span>
+        </label>
+        <div class="input-group mb-3">
+            <input name="consumptionSpikeDurationVariance" type="number" class="form-control"
+                id="consumptionDurationVariance" min="0" aria-describedby="consumptionDurationVarianceHelp"
+                value="{{household.consumptionSpikeDurationVariance}}">
+            <span class="input-group-text">minutes</span>
+        </div>
+        <div id="consumptionDurationVarianceHelp" class="form-text"></div>
+    </div>
+</fieldset>

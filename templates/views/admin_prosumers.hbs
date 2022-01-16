@@ -1,0 +1,16 @@
+<div class="my-3 ms-3">
+    <a href="/admin">
+        &#8249; Back
+    </a>
+</div>
+
+<h1>Prosumers</h1>
+<p>Click on prosumers to view and manage</p>
+
+<p>
+<ol id="prosumerlist">
+    {{#each list.data}}
+    <li><a href="./prosumers/{{_id}}">{{firstname}} {{lastname}} - {{email}}</a></li>
+    {{/each}}
+</ol>
+</p>

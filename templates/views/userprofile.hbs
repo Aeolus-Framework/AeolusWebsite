@@ -1,37 +1,35 @@
-<div class="m-5 pt-3 bg-white">
-    <div class="d-flex justify-content-between mx-3">
-        <a href="{{#ifeq profile.role 'Admin'}} /admin {{else}} /dashboard {{/ifeq}}">
-            &#8249; Back
-        </a>
-        <a href="/oauth/signout">
-            <button class="btn btn-outline-primary">
-                Sign out
-            </button>
-        </a>
-    </div>
-    <div class="d-flex justify-content-center">
-        <div class="d-flex flex-column ">
-            <img style="width: 200px; height: 200px" class="rounded-circle mx-auto" src="{{profile.profilePicture}}"
-                alt="Profile image not found">
-            <p class="mt-2 fs-3 text-center">
-                {{profile.firstname}} {{profile.lastname}}
-            </p>
-            <table class="table table-borderless">
-                <tbody>
-                    <tr>
-                        <td>Email</td>
-                        <td>{{profile.email}}</td>
-                    </tr>
-                    <tr>
-                        <td>Role</td>
-                        <td>{{profile.role}}</td>
-                    </tr>
-                    <tr>
-                        <td>Loginprovider</td>
-                        <td>{{profile.loginProvider}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+<div class="d-flex justify-content-between mx-3 mt-3">
+    <a href="{{#ifeq profile.role 'Admin'}} /admin {{else}} /dashboard {{/ifeq}}">
+        &#8249; Back
+    </a>
+    <a href="/oauth/signout">
+        <button class="btn btn-outline-primary">
+            Sign out
+        </button>
+    </a>
+</div>
+<div class="d-flex justify-content-center">
+    <div class="d-flex flex-column ">
+        <img style="width: 200px; height: 200px" class="rounded-circle mx-auto" src="{{profile.profilePicture}}"
+            alt="Profile image not found">
+        <p class="mt-2 fs-3 text-center">
+            {{profile.firstname}} {{profile.lastname}}
+        </p>
+        <table class="table table-borderless">
+            <tbody>
+                <tr>
+                    <td>Email</td>
+                    <td>{{profile.email}}</td>
+                </tr>
+                <tr>
+                    <td>Role</td>
+                    <td>{{profile.role}}</td>
+                </tr>
+                <tr>
+                    <td>Loginprovider</td>
+                    <td>{{profile.loginProvider}}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>

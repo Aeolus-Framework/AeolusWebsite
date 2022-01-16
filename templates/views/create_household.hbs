@@ -1,0 +1,53 @@
+<div class="d-flex justify-content-center">
+    <div class="m-2 m-sm-5 pt-3 d-flex justify-content-center bg-white" style="max-width: 500px;">
+        <div class="p-3 w-100">
+            <a href="/dashboard">
+                &#8249; Back
+            </a>
+            <h1 class="fs-3 mt-3">Create a new household</h1>
+            {{#if errors}}
+            <h2 class="fs-5">Errors</h2>
+            <ul>
+                {{#each errors}}
+                <li class="text-danger">{{this}}</li>
+                {{/each}}
+            </ul>
+            {{/if}}
+            <form action="/dashboard/create-household" method="post">
+                {{#if errors}}
+                <span class="fs-4">Errors:</span>
+                <ul>
+                    {{#each errors}}
+                    <li class="text-danger">{{this}}</li>
+                    {{/each}}
+                </ul>
+                {{/if}}
+
+                {{> form_household }}
+
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="button" class="btn btn-outline-secondary me-2"
+                        onclick="cancelFormEdits()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    ul {
+        list-style: none;
+    }
+
+    li::before {
+        content: "- ";
+    }
+</style>
+
+<script>
+    function cancelFormEdits() {
+        window.location.href = "/admin/prosumers/{{household.owner}}";
+    }
+</script>

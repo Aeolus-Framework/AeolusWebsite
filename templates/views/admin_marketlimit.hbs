@@ -1,0 +1,16 @@
+<h1>Assign sell limit on the market</h1>
+<form method="POST">
+    <div class="mb-3">
+        <label for="start" class="form-label">Start Date<span class="text-danger">*</span></label>
+        <input name="start" type="date" class="form-control" id="start"
+            value="{{#if sellLimit}}{{sellLimit.start}}{{/if}}" required>
+    </div>
+    <div class="mb-3">
+        <label for="end" class="form-label">End Date<span class="text-danger">*</span></label>
+        <input name="end" type="date" class="form-control" id="end" value="{{#if sellLimit}}{{sellLimit.end}}{{/if}}"
+            required>
+    </div>
+    <div class="d-flex justify-content-end mt-4">
+        <button type="submit" class="btn btn-primary">Place Limit</button>
+    </div>
+</form>
