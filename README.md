@@ -14,7 +14,7 @@ A Front End prototype in progress for the Aeolus Webapp
 | `GOOGLE_CLIENT_SECRET`          | Google OAuth client secret                                  |
 | `MONGODB_USERNAME` _(optional)_ | Username to access database                                 | _None_                     |
 | `MONGODB_PASSWORD` _(optional)_ | Password to access database                                 | _None_                     |
-| `API_HOST` _(optional)_         | Host and path to root of aeolus API                         | `"https://aeolus.se/api/"` |
+| `API_HOST` _(optional)_         | Host and path to root of aeolus API                         | `"https://aeolus.se/api"`  |
 | `JWT_ISSUER` _(optional)_       | Issuer to use when creating and verifying JWTs              | `"none"`                   |
 | `JWT_SECRET` _(optional)_       | Secret to use when creating and verifying JWTs              | `"123"`                    |
 | `PORT` _(optional)_             | Port that server will listen on                             | `5500`                     |

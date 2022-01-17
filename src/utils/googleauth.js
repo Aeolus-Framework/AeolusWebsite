@@ -1,9 +1,9 @@
-const { OAuth2Client } = require('google-auth-library');
+const { OAuth2Client } = require("google-auth-library");
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 
-if(!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) throw new Error("Google client id and client secret must be non-empty")
+if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) throw new Error("Google client id and client secret must be non-empty");
 
 const client = new OAuth2Client(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET);
 
@@ -33,4 +33,4 @@ async function verify(token) {
     };
 }
 
-module.exports = { verify };
+module.exports = { verify, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET };

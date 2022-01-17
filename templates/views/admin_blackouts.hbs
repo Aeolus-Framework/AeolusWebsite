@@ -1,0 +1,12 @@
+<div class="my-3 ms-3">
+    <a href="/admin">
+        &#8249; Back
+    </a>
+</div>
+<ol id="blackoutlist">
+    {{#each blackoutList}}
+    <li>
+        <a href="/admin/household/{{_id}}">{{name}}</a>
+    </li>
+    {{/each}}
+</ol>

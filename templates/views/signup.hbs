@@ -1,0 +1,45 @@
+<div class="m-2 m-sm-5 pt-3 d-flex justify-content-center bg-white">
+    <div class="p-3 w-100" style="max-width: 350px;">
+        <h1 class="fs-3">Welcome!</h1>
+        <p>We could not find any account for you so can create one for you. Do you want to continue?</p>
+        {{#if error}}
+        <p>Something went wrong and we were unable to create your account</p>
+        {{/if}}
+        <table class="table table-borderless">
+            <tbody>
+                <tr>
+                    <td>Firstname</td>
+                    <td>{{profile.firstname}}</td>
+                </tr>
+                <tr>
+                    <td>Lastname</td>
+                    <td>{{profile.lastname}}</td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td>{{profile.email}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <form action="/oauth/signup" method="post">
+            <div class="d-none">
+                <input type="text" name="profilePicture" value="{{profile.profilePicture}}">
+                <input type="text" name="loginProvider" value="{{profile.loginProvider}}">
+                <input type="text" name="firstname" value="{{profile.firstname}}">
+                <input type="text" name="lastname" value="{{profile.lastname}}">
+                <input type="text" name="email" value="{{profile.email}}">
+            </div>
+            <div class="d-flex justify-content-end mt-4">
+                <button type="button" class="btn btn-outline-secondary me-2"
+                    onclick="cancelRegistration()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Continue</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function cancelRegistration() {
+        window.location.href = "/oauth/signout"
+    }
+</script>

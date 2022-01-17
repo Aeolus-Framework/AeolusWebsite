@@ -1,0 +1,17 @@
+<p class="fs-5 mt-3 text-center">
+    You've signed out, welcome back later!
+</p>
+<p class="fs-6 mt-3 text-center">
+    <a href="/">Continue</a>...
+</p>
+
+<div class="g-signin2 d-none" data-width="300" data-height="75" data-longtitle="true">
+</div>
+
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<script src="/js/oauth.js"></script>
+<script>
+    window.addEventListener("load", () => {
+        signOut();
+    })
+</script>

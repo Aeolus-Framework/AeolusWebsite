@@ -22,13 +22,6 @@
     height: 60px;
 }
 
-nav {
-    background-color: #ffffff;
-    margin-top: 0.5%;
-    margin-left: 0.4%;
-    margin-right: 0.4%;
-}
-
 .center{
     text-align: center;
 }
@@ -115,11 +108,6 @@ body {
   
     /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     background: linear-gradient(to right, #00a896, #06c2af)
-}
-
-h3 {
-    font-size: 16px;
-    text-align: right;
 }
 
 h4 {

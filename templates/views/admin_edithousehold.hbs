@@ -1,0 +1,31 @@
+<div class="my-3 ms-3">
+    <a href="/admin/prosumers/{{household.owner}}">
+        &#8249; Back
+    </a>
+</div>
+
+<form action="/admin/household/{{household._id}}" method="post">
+    <div class="mb-3">
+        <label for="owner" class="form-label">Owner<span class="text-danger">*</span></label>
+        <input name="owner" type="text" class="form-control" id="owner" value="{{household.owner}}" required>
+    </div>
+
+    <div class="mb-3 form-check">
+        <input class="form-check-input" name="blackout" type="checkbox" class="form-control" id="blackout" {{#if
+            household.blackout}}checked{{/if}}>
+        <label class="form-check-label" for="blackout" class="form-label">Blackout</label>
+    </div>
+
+    {{> form_household }}
+
+    <div class="d-flex justify-content-end mt-4">
+        <button type="button" class="btn btn-outline-secondary me-2" onclick="cancelFormEdits()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+</form>
+
+<script>
+    function cancelFormEdits() {
+        window.location.href = "/admin/prosumers/{{household.owner}}";
+    }
+</script>

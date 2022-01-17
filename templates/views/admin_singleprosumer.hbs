@@ -1,0 +1,70 @@
+<div class="my-3 ms-3">
+    <a href="/admin/prosumers">
+        &#8249; Back
+    </a>
+</div>
+
+<div class="d-flex align-items-baseline mb-2">
+    <h1 class="mb-0">{{prosumer.firstname}} {{prosumer.lastname}}</h1>
+    <a class="ms-3" href="/admin/prosumers/{{prosumer._id}}/delete">
+        <button class="btn btn-sm btn-outline-danger">Delete</button>
+    </a>
+</div>
+
+<span>The following households are associated with {{prosumer.firstname}} {{prosumer.lastname}}</span>
+<div class="ms-3 mb-3">
+    {{#each households}}
+    <div>
+        <a href="/admin/household/{{_id}}">{{name}}</a>
+    </div>
+    {{/each}}
+</div>
+
+
+<form method="POST">
+    <span class="fs-4">User details</span>
+    {{#if errors}}
+    <h2 class="fs-5">Errors</h2>
+    <ul>
+        {{#each errors}}
+        <li class="text-danger">{{this}}</li>
+        {{/each}}
+    </ul>
+    {{/if}}
+
+    <div class="mb-3">
+        <label for="firstname" class="form-label">First Name<span class="text-danger">*</span></label>
+        <input name="firstname" type="text" class="form-control" id="firstname" aria-describedby="firstnameHelp"
+            value="{{prosumer.firstname}}" required>
+    </div>
+    <div class="mb-3">
+        <label for="lastname" class="form-label">Last Name<span class="text-danger">*</span></label>
+        <input name="lastname" type="text" class="form-control" id="lastname" aria-describedby="lastnameHelp"
+            value="{{prosumer.lastname}}" required>
+    </div>
+    <div class="mb-3">
+        <label for="profilePicture" class="form-label">Profilepicture</label>
+        <input name="profilePicture" type="url" class="form-control" id="profilePicture"
+            value="{{prosumer.profilePicture}}">
+    </div>
+    <div class="mb-3">
+        <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
+        <input name="email" type="text" class="form-control" id="email" aria-describedby="emailHelp"
+            value="{{prosumer.email}}" required>
+    </div>
+    <div class="mb-3">
+        <label for="enabled" class="form-label">Is Enabled<span class="text-danger">*</span></label>
+        <select id="enabled" name="enabled">
+            <option value="1" {{#if prosumer.enabled}}selected{{/if}}>true</option>
+            <option value="0" {{#unless prosumer.enabled}}selected{{/unless}}>false</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="disabledUntil" class="form-label">Disable user until date<span class="text-danger">*</span></label>
+        <input name="disabledUntil" type="date" class="form-control" id="disabledUntil"
+            aria-describedby="disabledUntilHelp" value="{{prosumer.disabledUntil}}">
+    </div>
+    <div class="d-flex justify-content-end mt-4">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
