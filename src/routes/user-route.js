@@ -5,24 +5,23 @@ const mathutil = require("../utils/math");
 const householdValidator = require("../utils/validators/householdForm");
 
 router.get("/", async (req, res) => {
-    //Get household id. Currently hardcoded to one household
+    const requestedHouseholdId = req.query.household;
     const householdRes = await aeolusAPI.fetchData("/simulator/household", "get", req.session.jwt);
 
     if (householdRes.data?.length === 0) {
         return res.render("dashboard", { profile: req.session.profile });
     }
 
-    const theHousehold = householdRes.data[0]._id;
+    const household = householdRes.data.find(h => h._id === requestedHouseholdId) || householdRes.data[0];
 
     //Get values for dashboard
-
     const [consumptionRes, productionRes, bufferRes, windspeedRes, priceRes, ratioRes] = await Promise.all([
-        aeolusAPI.fetchData(`/simulator/household/${theHousehold}/latest/Consumption`, "get", req.session.jwt),
-        aeolusAPI.fetchData(`/simulator/household/${theHousehold}/latest/Production`, "get", req.session.jwt),
-        aeolusAPI.fetchData(`/simulator/household/${theHousehold}/latest/Battery`, "get", req.session.jwt),
+        aeolusAPI.fetchData(`/simulator/household/${household._id}/latest/Consumption`, "get", req.session.jwt),
+        aeolusAPI.fetchData(`/simulator/household/${household._id}/latest/Production`, "get", req.session.jwt),
+        aeolusAPI.fetchData(`/simulator/household/${household._id}/latest/Battery`, "get", req.session.jwt),
         aeolusAPI.fetchData("/simulator/windspeed", "get", req.session.jwt),
         aeolusAPI.fetchData("/simulator/market", "get", req.session.jwt),
-        aeolusAPI.fetchData(`/simulator/household/${theHousehold}`, "get", req.session.jwt)
+        aeolusAPI.fetchData(`/simulator/household/${household._id}`, "get", req.session.jwt)
     ]);
 
     if (
@@ -34,21 +33,24 @@ router.get("/", async (req, res) => {
         return res.status(500).send();
     }
 
-    var consumptionValue = mathutil.round(consumptionRes.data.consumption, 0);
-    var productionValue = mathutil.round(productionRes.data.production, 0);
-    var bufferValue = mathutil.round(bufferRes.data.energy, 0);
-    var windspeedValue = mathutil.round(windspeedRes.data.windspeed, 0);
-    var priceValue = mathutil.round(priceRes.data.price.value, 2);
-    var buyRatioValue = mathutil.round(ratioRes.data.buyRatioUnderProduction * 100, 1);
-    var sellRatioValue = mathutil.round(ratioRes.data.sellRatioOverProduction * 100, 1);
+    var consumptionValue = mathutil.round(consumptionRes.data?.consumption, 0);
+    var productionValue = mathutil.round(productionRes.data?.production, 0);
+    var bufferValue = mathutil.round(bufferRes.data?.energy, 0);
+    var windspeedValue = mathutil.round(windspeedRes.data?.windspeed, 0);
+    var priceValue = mathutil.round(priceRes.data?.price.value, 2);
+    var buyRatioValue = mathutil.round(ratioRes.data?.buyRatioUnderProduction * 100, 1);
+    var sellRatioValue = mathutil.round(ratioRes.data?.sellRatioOverProduction * 100, 1);
 
     //calculate efficiency
     var efficiencyValue = (productionValue / consumptionValue) * 100;
     efficiencyValue = mathutil.round(efficiencyValue, 1);
 
     res.render("dashboard", {
+        profile: req.session.profile,
         title: "Aeolus - Dashboard",
         household: {
+            _id: household._id,
+            thumbnail: household.thumbnail,
             consumption: consumptionValue + " Wh",
             production: productionValue + " Wh",
             buffer: bufferValue + " J",
@@ -57,7 +59,8 @@ router.get("/", async (req, res) => {
             price: priceValue + " sek",
             buyRatio: buyRatioValue + " % to buy",
             sellRatio: sellRatioValue + " % to sell"
-        }
+        },
+        households: householdRes.data
     });
 });
 
@@ -94,60 +97,80 @@ router.post("/create-household", async (req, res) => {
     const formdata = req.body || {};
     const errors = householdValidator.validateForm(formdata);
 
-    if (errors?.length) {
-        const response = await aeolusAPI.fetchData("/simulator/household", "POST", res.session.jwt, formdata);
+    const newHousehold = {
+        owner: formdata.owner,
+        name: formdata.name,
+        thumbnail: formdata.thumbnail,
+        area: formdata.area,
+        location: {
+            latitude: formdata.locationLatitude,
+            longitude: formdata.locationLongitude
+        },
+        baseConsumption: formdata.baseConsumption,
+        battery: {
+            maxCapacity: formdata.batteryMaxCapacity
+        },
+        sellRatioOverProduction: formdata.sellRatioOverProduction,
+        buyRatioUnderProduction: formdata.buyRatioUnderProduction,
+        windTurbines: {
+            active: formdata.windTurbinesActive,
+            maximumProduction: formdata.windTurbinesMaximumProduction,
+            cutinWindspeed: formdata.windTurbinesCutinWindspeed,
+            cutoutWindspeed: formdata.windTurbinesCutoutWindspeed
+        },
+        consumptionSpike: {
+            AmplitudeMean: formdata.consumptionSpikeAmplitudeMean,
+            AmplitudeVariance: formdata.consumptionSpikeAmplitudeVariance,
+            DurationMean: formdata.consumptionSpikeDurationMean,
+            DurationVariance: formdata.consumptionSpikeDurationVariance
+        }
+    };
+
+    let response;
+    if (!errors?.length) {
+        response = await aeolusAPI.fetchData("/simulator/household", "POST", req.session.jwt, newHousehold);
         if (response.statusCode === 400) errors.push(...response.data);
         if (response.statusCode === 500) errors.push("Something went wrong (500)");
     }
 
     if (!errors.length) {
-        res.render("/dashboard", { profile: req.session.profile });
+        res.redirect(`/dashboard?household=${response.data._id}`);
     } else {
         res.render("create_household", {
             profile: req.session.profile,
-            household: req.body
+            household: req.body,
+            errors
         });
     }
 });
 
 router.post("/change-buy-ratio", async (req, res) => {
-    var buyRatio = req.body.buyRatio / 100;
+    const buyRatio = req.body.buyRatio / 100;
+    const householdId = req.body.id;
 
-    const householdRes = await aeolusAPI.fetchData("/simulator/household", "get", req.session.jwt);
-
-    if (householdRes.data?.length === 0) {
-        return res.render("dashboard", { profile: req.session.profile });
-    }
-
-    const theHousehold = householdRes.data[0]._id;
-    const apiResponse = await aeolusAPI.fetchData("/simulator/household/" + theHousehold, "PATCH", req.session.jwt, {
+    const apiResponse = await aeolusAPI.fetchData(`/simulator/household/${householdId}`, "PATCH", req.session.jwt, {
         buyRatioUnderProduction: buyRatio
     });
 
     if (apiResponse.statusCode === 200) {
-        res.redirect(302, "/dashboard");
+        res.redirect(302, `/dashboard?household=${householdId}`);
     } else {
-        res.redirect(302, `/dashboard?error=1`);
+        res.redirect(302, `/dashboard?household=${householdId}&error=${apiResponse.statusCode}`);
     }
 });
 
 router.post("/change-sell-ratio", async (req, res) => {
-    var sellRatio = req.body.sellRatio / 100;
+    const sellRatio = req.body.sellRatio / 100;
+    const householdId = req.body.id;
 
-    const householdRes = await aeolusAPI.fetchData("/simulator/household", "get", req.session.jwt);
-    if (householdRes.data?.length === 0) {
-        return res.render("dashboard", { profile: req.session.profile });
-    }
-
-    const theHousehold = householdRes.data[0]._id;
-    const apiResponse = await aeolusAPI.fetchData("/simulator/household/" + theHousehold, "PATCH", req.session.jwt, {
+    const apiResponse = await aeolusAPI.fetchData(`/simulator/household/${householdId}`, "PATCH", req.session.jwt, {
         sellRatioOverProduction: sellRatio
     });
 
     if (apiResponse.statusCode === 200) {
-        res.redirect(302, "/dashboard");
+        res.redirect(302, `/dashboard?household=${householdId}`);
     } else {
-        res.redirect(302, `/dashboard?error=1`);
+        res.redirect(302, `/dashboard?household=${householdId}&error=${apiResponse.statusCode}`);
     }
 });
 

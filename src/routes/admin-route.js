@@ -7,31 +7,43 @@ const householdValidator = require("../utils/validators/householdForm");
 const validator = require("validator");
 
 router.get("/", async (req, res) => {
-    const [powerplantRes, marketRes, blackoutRes] = await Promise.all([
+    const [powerplantRes, marketRes, blackoutRes, usersRes] = await Promise.all([
         aeolusAPI.fetchData("/simulator/powerplant/status", "get", req.session.jwt),
         aeolusAPI.fetchData("/simulator/market", "get", req.session.jwt),
-        aeolusAPI.fetchData("/simulator/grid/blackouts", "get", req.session.jwt)
+        aeolusAPI.fetchData("/simulator/grid/blackouts", "get", req.session.jwt),
+        aeolusAPI.fetchData("/social/users", "get", req.session.jwt)
     ]);
 
-    if (powerplantRes.statusCode !== 200 || marketRes.statusCode !== 200 || blackoutRes.statusCode !== 200) {
+    if (
+        powerplantRes.statusCode !== 200 ||
+        marketRes.statusCode !== 200 ||
+        blackoutRes.statusCode !== 200 ||
+        usersRes.statusCode !== 200
+    ) {
         return res.status(500).send();
     }
 
     const powerplantStatus = powerplantRes.data.active ? "Running" : "Stopped";
     const powerplantProduction = mathutil.round(powerplantRes.data.production.value, 2);
     const marketDemand = mathutil.round(marketRes.data.demand, 2);
-    const marketPrice = marketRes.data.price.value;
-    const isBlackout = blackoutRes.data.length === 0;
+    const marketPrice = mathutil.round(marketRes.data.price.value, 2);
+    const isBlackout = !(blackoutRes.data.length === 0);
+
+    const usersSignedIn = [];
+    for (const key in req.sessionStore.sessions) {
+        const session = JSON.parse(req.sessionStore.sessions[key]);
+        if (session.signedIn && session.profile.role.toLowerCase() !== "admin") usersSignedIn.push(session.profile);
+    }
 
     res.render("admin", {
         profile: req.session.profile,
         title: "Aeolus - Admin",
         power: powerplantStatus + " " + powerplantProduction + " kWh",
-        ratio: "2:1" + " Buffer / Market",
+        ratio: "2:1",
         demand: marketDemand + " kWh",
-        price: marketPrice + " kr / watt",
-        modelPrice: marketPrice + " kr / watt",
-        prosumers: "NaN" + " online", //Not implemented
+        price: marketPrice + " kr / kWh",
+        modelPrice: marketPrice + " kr / kWh",
+        usersSignedIn: usersSignedIn,
         blackout: isBlackout
     });
 });
@@ -91,6 +103,7 @@ router.get("/prosumers/:id", async (req, res) => {
         profile: req.session.profile,
         households: householdRes.data,
         prosumer: {
+            _id: userId,
             firstname: firstnameValue,
             lastname: lastnameValue,
             profilePicture: profilePictureValue,
@@ -130,8 +143,7 @@ router.post("/prosumers/:id/", async (req, res) => {
 });
 
 //deletes a user
-// TODO Change route, currently identical to the route above
-router.post("/prosumers/:id/delete", async (req, res) => {
+router.get("/prosumers/:id/delete", async (req, res) => {
     const userID = req.params.id;
 
     const apiResponse = await aeolusAPI.fetchData("/social/user/" + userID, "DELETE", req.session.jwt);
@@ -187,18 +199,51 @@ router.post("/household/:id", async (req, res) => {
 
     formdata.blackout = new Boolean(formdata?.blackout);
 
+    const household = {
+        owner: formdata.owner,
+        name: formdata.name,
+        thumbnail: formdata.thumbnail,
+        area: formdata.area,
+        location: {
+            latitude: formdata.locationLatitude,
+            longitude: formdata.locationLongitude
+        },
+        blackout: formdata.blackout,
+        baseConsumption: formdata.baseConsumption,
+        battery: {
+            maxCapacity: formdata.batteryMaxCapacity
+        },
+        sellRatioOverProduction: formdata.sellRatioOverProduction,
+        buyRatioUnderProduction: formdata.buyRatioUnderProduction,
+        windTurbines: {
+            active: formdata.windTurbinesActive,
+            maximumProduction: formdata.windTurbinesMaximumProduction,
+            cutinWindspeed: formdata.windTurbinesCutinWindspeed,
+            cutoutWindspeed: formdata.windTurbinesCutoutWindspeed
+        },
+        consumptionSpike: {
+            AmplitudeMean: formdata.consumptionSpikeAmplitudeMean,
+            AmplitudeVariance: formdata.consumptionSpikeAmplitudeVariance,
+            DurationMean: formdata.consumptionSpikeDurationMean,
+            DurationVariance: formdata.consumptionSpikeDurationVariance
+        }
+    };
+
     // new fields: owner, blackout
     const apiResponse = await aeolusAPI.fetchData(
         `/simulator/household/${householdID}`,
         "PATCH",
         req.session.jwt,
-        formdata
+        household
     );
 
     if (apiResponse.statusCode === 200) {
-        res.redirect(302, "/household/:id");
+        res.redirect(302, `/admin/household/${householdID}`);
     } else {
-        res.redirect(302, `/household/:id?error=1`);
+        res.render("admin_edithousehold", {
+            profile: req.session.profile,
+            household: formdata
+        });
     }
 });
 
@@ -239,6 +284,25 @@ router.post("/household/:id/market", async (req, res) => {
             res.redirect(302, `/household/:id/market?error=1`);
         }
     }
+});
+
+router.post("/setmarketprice", async (req, res) => {
+    const updatedAt = new Date();
+    const validUntil = new Date(updatedAt.getTime() + req.body.duration * 60 * 1000);
+    const price = Number(req.body.price);
+
+    const apiResponse = await aeolusAPI.fetchData("/simulator/market", "PATCH", req.session.jwt, {
+        price: {
+            value: price,
+            validUntil: validUntil,
+            updatedAt: updatedAt
+        }
+    });
+
+    if (apiResponse.statusCode === 200) {
+        return res.redirect(302, "/admin");
+    }
+    return res.redirect(302, `/admin?error=${apiResponse.statusCode}`);
 });
 
 module.exports = router;

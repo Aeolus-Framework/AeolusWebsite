@@ -24,10 +24,10 @@ const validator = require("validator");
  * @returns {string[]} A list of errors. If empty, no errors were found.
  */
 function validateForm(formdata) {
-    const validName = /^[\w\d\s\:\(\)\[\]]+$/i;
+    const validName = /^[åäö\w\d\s\:\(\)\[\]]+$/i;
     const errors = [];
     if (!validName.test(formdata.name)) errors.push("Incorrect name");
-    if (!validator.isUrl(formdata.thumbnail || "")) errors.push("Invalid thumbnail url");
+    if (formdata.thumbnail && !validator.isURL(formdata.thumbnail)) errors.push("Invalid thumbnail url");
     if (isNaN(formdata.area)) errors.push("Incorrect area, must be a number");
     if (isNaN(formdata.locationLatitude)) errors.push("Incorrect area, must be a number");
     if (isNaN(formdata.locationLongitude)) errors.push("Incorrect area, must be a number");

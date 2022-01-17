@@ -4,10 +4,15 @@
     </a>
 </div>
 
-<h1>{{prosumer.firstname}} {{prosumer.lastname}}</h1>
+<div class="d-flex align-items-baseline mb-2">
+    <h1 class="mb-0">{{prosumer.firstname}} {{prosumer.lastname}}</h1>
+    <a class="ms-3" href="/admin/prosumers/{{prosumer._id}}/delete">
+        <button class="btn btn-sm btn-outline-danger">Delete</button>
+    </a>
+</div>
 
-<p>The following households are associated with {{prosumer.firstname}} {{prosumer.lastname}}</p>
-<div>
+<span>The following households are associated with {{prosumer.firstname}} {{prosumer.lastname}}</span>
+<div class="ms-3 mb-3">
     {{#each households}}
     <div>
         <a href="/admin/household/{{_id}}">{{name}}</a>
@@ -17,6 +22,7 @@
 
 
 <form method="POST">
+    <span class="fs-4">User details</span>
     {{#if errors}}
     <h2 class="fs-5">Errors</h2>
     <ul>

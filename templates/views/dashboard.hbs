@@ -2,8 +2,23 @@
 {{#if household}}
 <div class="container dash">
     <h1 class="dash-title">Dashboard</h1>
-    <h3 class="location-time">Porsön - 1:34</h3>
+    <div class="mb-3 location-time">
+        <select class="form-select-sm" id="householdSelect">
+            {{#each households}}
+            <option value="{{_id}}" {{#ifeq ../household._id _id}}selected{{/ifeq}}>{{name}}</option>
+            {{/each}}
+        </select>
+        <a class="ms-3" href="/dashboard/create-household">Add a new household</a>
+    </div>
     <div class="row">
+        {{#if household.thumbnail}}
+        <div class="col-md-4 col-xl-3">
+            <div class="p-3 aeolus-green-bg rounded d-flex justify-content-center">
+                <img src="{{household.thumbnail}}" alt="" style="max-height: 95px; max-width: 195px;">
+            </div>
+        </div>
+        {{/if}}
+
         <div class="col-md-4 col-xl-3">
             <div class="card aeolus-green-bg order-card">
                 <div class="card-block">
@@ -73,7 +88,8 @@
                 <h1>Manage</h1>
 
                 <label for="buyRatio"><b>Buy Ratio (%)</b></label>
-                <input type="number" min=0 max=100 name="buyRatio" required>
+                <input type="number" min="0" max="100" name="buyRatio" required>
+                <input class="d-none" type="text" name="id" value="{{household._id}}" required>
 
                 <button type="submit" class="btn">Change</button>
             </form>
@@ -95,6 +111,7 @@
 
                 <label for="sellRatio"><b>Sell Ratio (%)</b></label>
                 <input type="number" min=0 max=100 name="sellRatio" required>
+                <input class="d-none" type="text" name="id" value="{{household._id}}" required>
 
                 <button type="submit" class="btn">Change</button>
             </form>
@@ -108,6 +125,13 @@
     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
     crossorigin="anonymous"></script>
 <script>
+    window.addEventListener("load", () => {
+        document.querySelector("#householdSelect")?.addEventListener("change", (e) => {
+            const selectedHouseholdId = e.srcElement.value;
+            window.location.search = `?household=${selectedHouseholdId}`
+        })
+    })
+
     function toggleForm(e) {
         console.log(e);
         const dispatcher = e;

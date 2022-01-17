@@ -1,6 +1,6 @@
 const fetch = require("node-fetch");
 
-const host = process.env.API_HOST || "https://aeolus.se/api/";
+const host = process.env.API_HOST || "https://aeolus.se/api";
 const methodTypeCanHaveBody = ["POST", "PUT", "PATCH"]
 
 /**

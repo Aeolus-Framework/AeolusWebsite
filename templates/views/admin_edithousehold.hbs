@@ -10,6 +10,12 @@
         <input name="owner" type="text" class="form-control" id="owner" value="{{household.owner}}" required>
     </div>
 
+    <div class="mb-3 form-check">
+        <input class="form-check-input" name="blackout" type="checkbox" class="form-control" id="blackout" {{#if
+            household.blackout}}checked{{/if}}>
+        <label class="form-check-label" for="blackout" class="form-label">Blackout</label>
+    </div>
+
     {{> form_household }}
 
     <div class="d-flex justify-content-end mt-4">
